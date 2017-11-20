@@ -75,7 +75,7 @@ GLvoid Mesh::affichage() const {
 	     //glColor3f(1.0,0.5,0.5);
 	     glVertex3f(vertices[faces_v[i][j]].getx(), vertices[faces_v[i][j]].gety(), vertices[faces_v[i][j]].getz());
 	     glNormal3f(normals[faces_n[i][j]].getx(), normals[faces_n[i][j]].gety(), normals[faces_n[i][j]].getz());
-	     glTexCoord2d(normals[faces_t[i][j]].getx(), normals[faces_t[i][j]].gety());
+	     //glTexCoord2d(textures[faces_t[i][j]].getx(), textures[faces_t[i][j]].gety());
 	  }
 	  glEnd();
 	}
