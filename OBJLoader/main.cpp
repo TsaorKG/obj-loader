@@ -31,7 +31,7 @@ void specialKeys( int key, int x, int y );
 
 
 int main(int argc, char *argv[]) {
-   mesh.readOBJ("cube.obj");
+   mesh.readOBJ("DNA.obj");
    // Initialisation de GLUT
    glutInit(&argc, argv);
    // Choix du mode d'affichage (ici RVB)

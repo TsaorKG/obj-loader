@@ -41,11 +41,13 @@ void Mesh::readOBJ(const char* filename) {
 					// condition ? value_if_true : value_if_false
 					// in case there is no texture data we put "1"
 					faces_t_tmp.push_back( atoi(((v2[1]=="")?"1":v2[1]).c_str()) -1);
-					faces_n_tmp.push_back(atoi(v2[2].c_str())-1);
+					if (v2.size() > 2) { // in case there is no normal
+						faces_n_tmp.push_back(atoi(v2[2].c_str())-1);
+					}
 				}
-				faces_v.push_back(faces_v_tmp);
-				faces_t.push_back(faces_t_tmp);
-				faces_n.push_back(faces_n_tmp);
+				if (faces_v_tmp.size() > 0) { faces_v.push_back(faces_v_tmp); }
+				if (faces_t_tmp.size() > 0) { faces_t.push_back(faces_t_tmp); }
+				if (faces_n_tmp.size() > 0) { faces_n.push_back(faces_n_tmp); }
 
 			}
 		}
