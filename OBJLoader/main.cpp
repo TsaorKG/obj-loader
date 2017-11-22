@@ -31,7 +31,7 @@ void specialKeys( int key, int x, int y );
 
 
 int main(int argc, char *argv[]) {
-   mesh.readOBJ("cube.obj");
+   mesh.readOBJ("DNA.obj");
    // Initialisation de GLUT
    glutInit(&argc, argv);
    // Choix du mode d'affichage (ici RVB)
@@ -44,21 +44,21 @@ int main(int argc, char *argv[]) {
    glutCreateWindow("Load OBJ");
    // Enable Z-buffer depth test
    glEnable(GL_DEPTH_TEST);
-   
+
    // Définition de la couleur d'effacement du framebuffer
    glClearColor(0.0f,0.0f,0.0f,0.0f);
-   
-  
+
+
    // Définition des fonctions de callbacks
    glutDisplayFunc(affichage);
    glutKeyboardFunc(clavier);
    glutReshapeFunc(redimensionner);
    glutSpecialFunc(specialKeys);
-   
+
    // Lancement de la boucle infinie GLUT
    glutMainLoop();
 
-	return 0;
+   return 0;
 }
 
 // Callback de redimensionnement de la fenêtre

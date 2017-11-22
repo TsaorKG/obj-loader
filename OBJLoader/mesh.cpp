@@ -25,7 +25,7 @@ void Mesh::readOBJ(const char* filename) {
 				if (line[1] == 'n') { // add vectors to normals list, converting strings to floats
 					normals.push_back(Vector(atof(v[0].c_str()),atof(v[1].c_str()),atof(v[2].c_str())));
 				}
-				if (line[1] == 't') {
+				if (line[1] == 't') { // add vectors to textures list, converting strings to floats
 					textures.push_back(Vector(atof(v[0].c_str()),atof(v[1].c_str())));
 				}
 				else { // add vectors to vertices list, converting strings to floats
@@ -40,7 +40,7 @@ void Mesh::readOBJ(const char* filename) {
 					faces_v_tmp.push_back(atoi(v2[0].c_str())-1);
 					// condition ? value_if_true : value_if_false
 					// in case there is no texture data we put "1"
-					faces_t_tmp.push_back( atoi(((v2[1].size()==0)?"1":v2[1]).c_str()) -1);
+					faces_t_tmp.push_back( atoi(((v2[1]=="")?"1":v2[1]).c_str()) -1);
 					faces_n_tmp.push_back(atoi(v2[2].c_str())-1);
 				}
 				faces_v.push_back(faces_v_tmp);
@@ -73,9 +73,15 @@ GLvoid Mesh::affichage() const {
 	  glBegin(GL_POLYGON);
 	  for(int j=0;j<faces_v[i].size();j++) {
 	     //glColor3f(1.0,0.5,0.5);
-	     glVertex3f(vertices[faces_v[i][j]].getx(), vertices[faces_v[i][j]].gety(), vertices[faces_v[i][j]].getz());
-	     glNormal3f(normals[faces_n[i][j]].getx(), normals[faces_n[i][j]].gety(), normals[faces_n[i][j]].getz());
-	     glTexCoord2d(textures[faces_t[i][j]].getx(), textures[faces_t[i][j]].gety());
+	  	 if (vertices.size() > 0) {
+	  	 	glVertex3f(vertices[faces_v[i][j]].getx(), vertices[faces_v[i][j]].gety(), vertices[faces_v[i][j]].getz());
+	  	 }
+	     if (normals.size() > 0) {
+	     	glNormal3f(normals[faces_n[i][j]].getx(), normals[faces_n[i][j]].gety(), normals[faces_n[i][j]].getz());
+	     }
+	     if (textures.size() > 0) {
+	     	glTexCoord2d(textures[faces_t[i][j]].getx(), textures[faces_t[i][j]].gety());
+	     }
 	  }
 	  glEnd();
 	}
