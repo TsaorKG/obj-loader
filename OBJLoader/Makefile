@@ -2,7 +2,6 @@
 
 SOURCE=main.cpp mesh.cpp utilities.cpp vector.cpp
 MYPROGRAM=prog
-#MYINCLUDES=/home/scale/g++Projects/gLib/
 
 MYLIBRARIES=-lGL -lGLU -lglut
 CC=g++
