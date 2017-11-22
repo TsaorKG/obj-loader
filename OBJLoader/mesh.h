@@ -16,6 +16,7 @@ using namespace std;
 
 class Mesh {
 private:
+	// For loading OBJ files
 	vector<Vector> vertices;
 	vector<Vector> textures;
 	vector<Vector> normals;
@@ -26,6 +27,8 @@ private:
 	GLfloat angleX;
 	GLfloat angleY;
 	float zoom;
+	// For loading MTL files
+	vector<string> textureFiles;
 public:
 	Mesh() { angleX=0.0f; angleY=0.0f; zoom = 1.0f; }
 	vector<Vector> getVertices() const { return vertices; }
@@ -37,6 +40,7 @@ public:
 	int getNbVertices() const { return nbVertices; }
 	int getNbNormals() const { return nbNormals; }
 	void readOBJ(const char* filename);
+	void readMTL(const char* filename);
 	GLvoid affichage() const;
 	float getZoom() const { return zoom; }
 	void setZoom(float _zoom) { zoom = _zoom; }

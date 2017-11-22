@@ -58,6 +58,11 @@ void Mesh::readOBJ(const char* filename) {
 	}
 }
 
+void Mesh::readMTL(const char* filename) {
+	// Read MTL file, according to instructions in OBJ file.
+	// Fill textureFiles vector
+}
+
 GLvoid Mesh::affichage() const {
 	// Emptying frame buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -65,27 +70,33 @@ GLvoid Mesh::affichage() const {
 	glMatrixMode(GL_MODELVIEW); // projection?
 
 	// Rotation
-   glLoadIdentity();
-   glRotatef(-angleY,1.0f,0.0f,0.0f);
-   glRotatef(-angleX,0.0f,1.0f,0.0f);
-   glScalef(zoom,zoom,zoom);
+	glLoadIdentity();
+	glRotatef(-angleY,1.0f,0.0f,0.0f);
+	glRotatef(-angleX,0.0f,1.0f,0.0f);
+	// Scale
+	glScalef(zoom,zoom,zoom);
+
+	// Texture
+	// if (textureFiles.size() > 0) {
+	// 	glBindTexture(GL_TEXTURE_2D, textureFiles[0]); // load the first texture file
+	// }
 
 	// Draw a face at a time
 	for(int i=0;i<nbFaces;i++) {
-	  glBegin(GL_POLYGON);
-	  for(int j=0;j<faces_v[i].size();j++) {
-	     //glColor3f(1.0,0.5,0.5);
-	  	 if (vertices.size() > 0) {
-	  	 	glVertex3f(vertices[faces_v[i][j]].getx(), vertices[faces_v[i][j]].gety(), vertices[faces_v[i][j]].getz());
-	  	 }
-	     if (normals.size() > 0) {
-	     	glNormal3f(normals[faces_n[i][j]].getx(), normals[faces_n[i][j]].gety(), normals[faces_n[i][j]].getz());
-	     }
-	     if (textures.size() > 0) {
-	     	glTexCoord2d(textures[faces_t[i][j]].getx(), textures[faces_t[i][j]].gety());
-	     }
-	  }
-	  glEnd();
+		glBegin(GL_POLYGON);
+		for(int j=0;j<faces_v[i].size();j++) {
+			//glColor3f(1.0,0.5,0.5);
+			if (vertices.size() > 0) {
+				glVertex3f(vertices[faces_v[i][j]].getx(), vertices[faces_v[i][j]].gety(), vertices[faces_v[i][j]].getz());
+				}
+				if (normals.size() > 0) {
+					glNormal3f(normals[faces_n[i][j]].getx(), normals[faces_n[i][j]].gety(), normals[faces_n[i][j]].getz());
+				}
+				if (textures.size() > 0) {
+					glTexCoord2d(textures[faces_t[i][j]].getx(), textures[faces_t[i][j]].gety());
+			}
+		}
+		glEnd();
 	}
 	glFlush();
 	glutSwapBuffers();

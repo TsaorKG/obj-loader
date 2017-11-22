@@ -31,7 +31,7 @@ void specialKeys( int key, int x, int y );
 
 
 int main(int argc, char *argv[]) {
-   mesh.readOBJ("DNA.obj");
+   mesh.readOBJ("TieFighter.obj");
    // Initialisation de GLUT
    glutInit(&argc, argv);
    // Choix du mode d'affichage (ici RVB)
@@ -42,8 +42,19 @@ int main(int argc, char *argv[]) {
    glutInitWindowSize(windowW, windowH);
    // Creation de la fenetre GLUT
    glutCreateWindow("Load OBJ");
+   
+   // With help from NeHe tutorial
+   // Enable Texture Mapping
+   glEnable(GL_TEXTURE_2D);
+   glClearDepth(1.0f);
+   // Depth Buffer Setup
+   glEnable(GL_DEPTH_TEST);
    // Enable Z-buffer depth test
    glEnable(GL_DEPTH_TEST);
+   // The Type Of Depth Testing To Do
+   glDepthFunc(GL_LEQUAL);
+   // Really Nice Perspective
+   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); 
 
    // Définition de la couleur d'effacement du framebuffer
    glClearColor(0.0f,0.0f,0.0f,0.0f);
