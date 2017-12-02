@@ -1,9 +1,9 @@
 #------------------------------------------------------------------------------
 
-SOURCE=main.cpp mesh.cpp utilities.cpp vector.cpp
+SOURCE=main.cpp mesh.cpp utilities.cpp vector.cpp texture.cpp
 MYPROGRAM=prog
 
-MYLIBRARIES=-lGL -lGLU -lglut
+MYLIBRARIES=-lGL -lGLU -lglut -ljpeg
 CC=g++
 
 #------------------------------------------------------------------------------

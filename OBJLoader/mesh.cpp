@@ -1,4 +1,5 @@
 #include "vector.h"
+#include "texture.h"
 #include "mesh.h"
 #include "utilities.h"
 #include <fstream>
@@ -14,7 +15,7 @@
 
 using namespace std;
 
-void Mesh::readOBJ(const char* filename) {
+bool Mesh::readOBJ(const char* filename) {
 	// Read an OBJ file (filename) and retrieve all the vertices coordinates
 	ifstream infile (filename); // open the file in reading mode
 	string line;
@@ -48,19 +49,75 @@ void Mesh::readOBJ(const char* filename) {
 				if (faces_v_tmp.size() > 0) { faces_v.push_back(faces_v_tmp); }
 				if (faces_t_tmp.size() > 0) { faces_t.push_back(faces_t_tmp); }
 				if (faces_n_tmp.size() > 0) { faces_n.push_back(faces_n_tmp); }
-
 			}
+			if (line[0] == 'm') { // MTL filename
+				vector<string> v = split(line, ' ');
+				mtlFilename = v[0];
+				if (readMTL(mtlFilename.c_str()) == false) {
+					cout << "Problem reading MTL file" << endl;
+				}
+			}
+			// if (line[0] == 'u') { // new material in use
+			// 	vector<string> v = split(line, ' ');
+			// 	materialNames.push_back(v[0]); // add the new material to the material list
+			// 	// TODO: how to know when to use the right material when displaying?
+			// }
 		}
 		infile.close();
 		nbFaces = faces_v.size();
 		nbVertices = vertices.size();
 		nbNormals = normals.size();
+		return true;
 	}
+	return false;
 }
 
-void Mesh::readMTL(const char* filename) {
+bool Mesh::readMTL(const char* filename) {
 	// Read MTL file, according to instructions in OBJ file.
-	// Fill textureFiles vector
+	cout << "Reading MTL file" << endl;
+	ifstream infile (filename); // open the file in reading mode
+	string line;
+	if (infile.is_open()) {
+		while (getline(infile, line)) {
+			if (line[0] == 'n') { // newmtl
+				vector<string> v = split(line, ' ');
+				materialNames.push_back(v[0]); // add the new material to the material list
+			}
+			if (line[0] == 'N' && line[1] == 's') { // Ns
+				vector<string> v = split(line, ' ');
+				Ns.push_back(atof(v[0].c_str()));
+			}
+			if (line[0] == 'd') { // d
+				vector<string> v = split(line, ' ');
+				d.push_back(atof(v[0].c_str()));
+			}
+			if (line[0] == 'K' && line[1] == 'a') { // Ka
+				vector<string> v = split(line, ' ');
+				Ka.push_back(Vector(atof(v[0].c_str()),atof(v[1].c_str()),atof(v[2].c_str())));
+			}
+			if (line[0] == 'K' && line[1] == 'd') { // Kd
+				vector<string> v = split(line, ' ');
+				Kd.push_back(Vector(atof(v[0].c_str()),atof(v[1].c_str()),atof(v[2].c_str())));
+			}
+			if (line[0] == 'K' && line[1] == 's') { // Ks
+				vector<string> v = split(line, ' ');
+				Ks.push_back(Vector(atof(v[0].c_str()),atof(v[1].c_str()),atof(v[2].c_str())));
+			}
+			if (line[0] == 'K' && line[1] == 'e') { // Ke
+				vector<string> v = split(line, ' ');
+				Ke.push_back(Vector(atof(v[0].c_str()),atof(v[1].c_str()),atof(v[2].c_str())));
+			}
+			if (line[0] == 'm') { // map_Bump
+				vector<string> v = split(line, ' ');
+				vector<string> v2 = split(v[0], '/');
+				textureFiles.push_back(v2[v2.size()-1]); // we take the jpg filename without the path
+			}
+		}
+		infile.close();
+		cout << "Reading done!" << endl;
+		return true;
+	}
+	return false;
 }
 
 GLvoid Mesh::affichage() const {
@@ -76,10 +133,7 @@ GLvoid Mesh::affichage() const {
 	// Scale
 	glScalef(zoom,zoom,zoom);
 
-	// Texture
-	// if (textureFiles.size() > 0) {
-	// 	glBindTexture(GL_TEXTURE_2D, textureFiles[0]); // load the first texture file
-	// }
+	glEnable(GL_TEXTURE_2D);
 
 	// Draw a face at a time
 	for(int i=0;i<nbFaces;i++) {

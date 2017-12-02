@@ -28,7 +28,11 @@ private:
 	GLfloat angleY;
 	float zoom;
 	// For loading MTL files
-	vector<string> textureFiles;
+	string mtlFilename;
+	vector<string> materialNames; // list of material names
+	vector<string> textureFiles; // list of jpg files
+	vector<Vector> Ka, Kd, Ks, Ke; // coefficients for each material used
+	vector<float> Ns, d; // coefficients again
 public:
 	Mesh() { angleX=0.0f; angleY=0.0f; zoom = 1.0f; }
 	vector<Vector> getVertices() const { return vertices; }
@@ -39,8 +43,8 @@ public:
 	int getNbFaces() const { return nbFaces; }
 	int getNbVertices() const { return nbVertices; }
 	int getNbNormals() const { return nbNormals; }
-	void readOBJ(const char* filename);
-	void readMTL(const char* filename);
+	bool readOBJ(const char* filename);
+	bool readMTL(const char* filename);
 	GLvoid affichage() const;
 	float getZoom() const { return zoom; }
 	void setZoom(float _zoom) { zoom = _zoom; }
@@ -48,6 +52,16 @@ public:
 	GLfloat getAngleY() const { return angleY; }
 	void setAngleX(GLfloat _angleX) { angleX = _angleX; }
 	void setAngleY(GLfloat _angleY) { angleY = _angleY; }
+	// Methods for MTL files
+	string getMtlFilename() const { return mtlFilename; }
+	vector<string> getMaterialNames() const { return materialNames; }
+	vector<string> getTextureFiles() const { return textureFiles; }
+	vector<Vector> getKa() const { return Ka; }
+	vector<Vector> getKd() const { return Kd; }
+	vector<Vector> getKs() const { return Ks; }
+	vector<Vector> getKe() const { return Ke; }
+	vector<float> getNs() const { return Ns; }
+	vector<float> getD() const { return d; }
 };
 
 #endif

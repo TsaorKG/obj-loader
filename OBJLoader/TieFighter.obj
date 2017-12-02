@@ -1,6 +1,6 @@
 # Blender v2.77 (sub 0) OBJ File: 'Tie Fighter.blend'
 # www.blender.org
-mtllib Tie Fighter.mtl
+mtllib TieFighter.mtl
 o Sphere
 v 0.131683 0.551789 0.660628
 v 0.118416 0.595316 0.611084

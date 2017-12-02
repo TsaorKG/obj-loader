@@ -1,4 +1,5 @@
 #include "vector.h"
+#include "texture.h"
 #include "mesh.h"
 #include <iostream>
 #ifdef __APPLE__
@@ -7,6 +8,8 @@
 #else
 #include <GL/gl.h>
 #include <GL/glut.h>
+#include <GL/glext.h>
+#define GL_GLEXT_PROTOTYPES
 #endif
 
 using namespace std;
@@ -18,12 +21,18 @@ float focale = 65.0f;
 float near = 0.1f;
 float far = 100.0f;
 float zoom = 1.0f;
+// Rotations around X and Y axis
+GLint oldX = 0;
+GLint oldY = 0;
+GLboolean boutonClick = false;
 // Mesh creation
 Mesh mesh;
 
 
 // callback functions
 GLvoid affichage() { mesh.affichage(); }
+GLvoid souris(int bouton, int etat, int x, int y);
+GLvoid deplacementSouris(int x, int y);
 GLvoid redimensionner(int w, int h);
 GLvoid clavier(unsigned char touche, int x, int y);
 void specialKeys( int key, int x, int y );
@@ -31,7 +40,16 @@ void specialKeys( int key, int x, int y );
 
 
 int main(int argc, char *argv[]) {
-   mesh.readOBJ("TieFighter.obj");
+   if (argc > 0) {
+      if (mesh.readOBJ(argv[1]) == false) {
+         cout << "Problem reading OBJ file" << endl;
+      }
+   }
+   else {
+      if (mesh.readOBJ("DNA.obj") == false) {
+         cout << "Problem reading OBJ file" << endl;
+      }
+   }
    // Initialisation de GLUT
    glutInit(&argc, argv);
    // Choix du mode d'affichage (ici RVB)
@@ -49,10 +67,27 @@ int main(int argc, char *argv[]) {
    glClearDepth(1.0f);
    // Depth Buffer Setup
    glEnable(GL_DEPTH_TEST);
-   // Enable Z-buffer depth test
-   glEnable(GL_DEPTH_TEST);
    // The Type Of Depth Testing To Do
    glDepthFunc(GL_LEQUAL);
+
+   // Texture loading
+   if (mesh.getTextureFiles().size() > 0)
+   {
+      GLuint textureID = 0;
+      Texture T = Texture(mesh.getTextureFiles()[0].c_str(), false);
+      glGenTextures(1, &textureID);
+      glBindTexture(GL_TEXTURE_2D, textureID);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, T.getTexData());
+   }
+   //glGenerateMipmap(GL_TEXTURE_2D);  //Generate mipmaps now!!! Not working in VM
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+
    // Really Nice Perspective
    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); 
 
@@ -62,6 +97,8 @@ int main(int argc, char *argv[]) {
 
    // Définition des fonctions de callbacks
    glutDisplayFunc(affichage);
+   glutMouseFunc(souris);
+   glutMotionFunc(deplacementSouris);
    glutKeyboardFunc(clavier);
    glutReshapeFunc(redimensionner);
    glutSpecialFunc(specialKeys);
@@ -91,14 +128,10 @@ GLvoid redimensionner(int w, int h) {
    glLoadIdentity();
    
    // Viewport
-   // // TODO Essayez de modifier l'appel à glViewport
-   // en changeant les parametre d'appel a la fonction mais
-   // tout en obtenant le meme resultat
    glViewport(0, 0, windowW, windowH);
    
    // Mise en place de la perspective
-   // TODO : peut-on changerle ratio ici pour un meilleur resultat ?
-   gluPerspective(focale, 4/3.0, near, far);
+   gluPerspective(focale, ratio, near, far);
    
    // Placement de la caméra
    gluLookAt(0, 0, 2, 0, 0, 0, 0, 1, 0);
@@ -146,4 +179,45 @@ void specialKeys( int key, int x, int y ) {
     
    //  Request display update
    glutPostRedisplay();
+}
+
+// Mouse functions
+GLvoid souris(int bouton, int etat, int x, int y){
+   // Test pour voir si le bouton gauche de la souris est appuyé
+   if(bouton == GLUT_LEFT_BUTTON && etat == GLUT_DOWN) {
+      boutonClick = true;
+      oldX = x;
+      oldY = y;
+   }
+   
+   // si on relache le bouton gauche
+   if(bouton == GLUT_LEFT_BUTTON && etat == GLUT_UP) {
+      boutonClick = false;
+   }
+
+   if(bouton==3) { // scroll up
+      mesh.setZoom(mesh.getZoom()+0.01);
+      glutPostRedisplay();
+   }
+   if(bouton==4) { // scroll down
+      mesh.setZoom(mesh.getZoom()-0.01);
+      glutPostRedisplay();
+   }
+}
+
+GLvoid deplacementSouris(int x, int y) {
+   // si le bouton gauche est appuye et qu'on se deplace
+   // alors on doit modifier les angles de rotations du cube
+   // en fonction de la derniere position de la souris 
+   // et de sa position actuelle
+   if(boutonClick) {
+      mesh.setAngleX(mesh.getAngleX() + (x-oldX)*0.5);
+      mesh.setAngleY(mesh.getAngleY() + (y-oldY)*0.5);
+      // Appeler le re-affichage de la scene OpenGL
+      glutPostRedisplay();
+   }
+   
+   // Mise a jour des anciennes positions de la souris en X et Y
+   oldX = x;
+   oldY = y;
 }
