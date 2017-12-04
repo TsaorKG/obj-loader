@@ -37,10 +37,8 @@ GLvoid redimensionner(int w, int h);
 GLvoid clavier(unsigned char touche, int x, int y);
 void specialKeys( int key, int x, int y );
 
-
-
 int main(int argc, char *argv[]) {
-   if (argc > 0) {
+   if (argc > 1) {
       if (mesh.readOBJ(argv[1]) == false) {
          cout << "Problem reading OBJ file" << endl;
       }
@@ -69,6 +67,10 @@ int main(int argc, char *argv[]) {
    glEnable(GL_DEPTH_TEST);
    // The Type Of Depth Testing To Do
    glDepthFunc(GL_LEQUAL);
+   // Enable lighting
+   glEnable(GL_LIGHTING);
+   // Enable light number 1
+   glEnable(GL_LIGHT0);
 
    // Texture loading
    if (mesh.getTextureFiles().size() > 0)

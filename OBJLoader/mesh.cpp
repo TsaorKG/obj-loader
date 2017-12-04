@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include "stdlib.h"
+#include <string.h>
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #include <GLUT/glut.h>
@@ -51,17 +52,18 @@ bool Mesh::readOBJ(const char* filename) {
 				if (faces_n_tmp.size() > 0) { faces_n.push_back(faces_n_tmp); }
 			}
 			if (line[0] == 'm') { // MTL filename
-				vector<string> v = split(line, ' ');
-				mtlFilename = v[0];
+				mtlFilename = getMtlFilename(line);
 				if (readMTL(mtlFilename.c_str()) == false) {
 					cout << "Problem reading MTL file" << endl;
 				}
 			}
-			// if (line[0] == 'u') { // new material in use
-			// 	vector<string> v = split(line, ' ');
-			// 	materialNames.push_back(v[0]); // add the new material to the material list
-			// 	// TODO: how to know when to use the right material when displaying?
-			// }
+			if (line[0] == 'u') { // new material in use
+				vector<string> v = split(line, ' ');
+				faceTOmaterial a;
+				a.materialIndex = index(materialNames, v[0]);
+				a.faceIndex = faces_v.size(); // the next surface is the first surface with this material
+				if (a.materialIndex > -1) { faceTOmaterial_v.push_back(a); }
+			}
 		}
 		infile.close();
 		nbFaces = faces_v.size();
@@ -74,7 +76,7 @@ bool Mesh::readOBJ(const char* filename) {
 
 bool Mesh::readMTL(const char* filename) {
 	// Read MTL file, according to instructions in OBJ file.
-	cout << "Reading MTL file" << endl;
+	cout << "Reading MTL file " << filename << endl;
 	ifstream infile (filename); // open the file in reading mode
 	string line;
 	if (infile.is_open()) {
@@ -124,7 +126,8 @@ GLvoid Mesh::affichage() const {
 	// Emptying frame buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glMatrixMode(GL_MODELVIEW); // projection?
+	// Projection mode
+	glMatrixMode(GL_MODELVIEW);
 
 	// Rotation
 	glLoadIdentity();
@@ -132,14 +135,23 @@ GLvoid Mesh::affichage() const {
 	glRotatef(-angleX,0.0f,1.0f,0.0f);
 	// Scale
 	glScalef(zoom,zoom,zoom);
+	// Material Index in use
+	int materialIndex = -1;
 
+	// Enable textures
 	glEnable(GL_TEXTURE_2D);
 
 	// Draw a face at a time
 	for(int i=0;i<nbFaces;i++) {
 		glBegin(GL_POLYGON);
+		// Optionnaly change material index in use
+		for(int k=0; k<faceTOmaterial_v.size(); k++) {
+			if (i == faceTOmaterial_v[k].faceIndex) { // the next surface needs a new material
+				materialIndex = faceTOmaterial_v[k].materialIndex;
+				light(materialIndex); // change the material in use
+			}
+		}
 		for(int j=0;j<faces_v[i].size();j++) {
-			//glColor3f(1.0,0.5,0.5);
 			if (vertices.size() > 0) {
 				glVertex3f(vertices[faces_v[i][j]].getx(), vertices[faces_v[i][j]].gety(), vertices[faces_v[i][j]].getz());
 				}
@@ -154,4 +166,22 @@ GLvoid Mesh::affichage() const {
 	}
 	glFlush();
 	glutSwapBuffers();
+}
+
+void Mesh::light(int materialIndex) const {
+	// set light
+	GLfloat tmp[3];
+	if (Ks.size() > 0) {
+		VectorTOglfloat(Ks[materialIndex], tmp); // Converting a Vector to a GLfloat table
+    	glLightfv(GL_LIGHT0, GL_SPECULAR, tmp); // Loading new light
+	}
+	if (Ka.size() > 0) { VectorTOglfloat(Ka[materialIndex], tmp); glLightfv(GL_LIGHT0, GL_AMBIENT, tmp); }
+	if (Kd.size() > 0) { VectorTOglfloat(Kd[materialIndex], tmp); glLightfv(GL_LIGHT0, GL_DIFFUSE, tmp); }
+	if (Ke.size() > 0) { VectorTOglfloat(Ke[materialIndex], tmp); glLightfv(GL_LIGHT0, GL_EMISSION, tmp); }
+	if (Ns.size() > 0) {
+		GLfloat tmp2[1];
+		tmp2[0] = (GLfloat)Ns[materialIndex];
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmp2);
+	}
+	if (d.size() > 0) {  }
 }

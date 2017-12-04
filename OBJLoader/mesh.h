@@ -14,6 +14,12 @@
 
 using namespace std;
 
+struct faceTOmaterial {
+	// Data struct to bind the first surface index to a material index
+	int materialIndex;
+	int faceIndex;
+} typedef faceTOmaterial;
+
 class Mesh {
 private:
 	// For loading OBJ files
@@ -21,6 +27,7 @@ private:
 	vector<Vector> textures;
 	vector<Vector> normals;
 	vector< vector<int> > faces_v, faces_t, faces_n;
+	vector<faceTOmaterial> faceTOmaterial_v;
 	int nbFaces;
 	int nbVertices;
 	int nbNormals;
@@ -31,8 +38,8 @@ private:
 	string mtlFilename;
 	vector<string> materialNames; // list of material names
 	vector<string> textureFiles; // list of jpg files
-	vector<Vector> Ka, Kd, Ks, Ke; // coefficients for each material used
-	vector<float> Ns, d; // coefficients again
+	vector<Vector> Ka, Kd, Ks, Ke; // coefficients for each material used (ambient, diffuse, specular, emissive)
+	vector<float> Ns, d; // coefficients again (shininess, opacity)
 public:
 	Mesh() { angleX=0.0f; angleY=0.0f; zoom = 1.0f; }
 	vector<Vector> getVertices() const { return vertices; }
@@ -53,15 +60,8 @@ public:
 	void setAngleX(GLfloat _angleX) { angleX = _angleX; }
 	void setAngleY(GLfloat _angleY) { angleY = _angleY; }
 	// Methods for MTL files
-	string getMtlFilename() const { return mtlFilename; }
-	vector<string> getMaterialNames() const { return materialNames; }
 	vector<string> getTextureFiles() const { return textureFiles; }
-	vector<Vector> getKa() const { return Ka; }
-	vector<Vector> getKd() const { return Kd; }
-	vector<Vector> getKs() const { return Ks; }
-	vector<Vector> getKe() const { return Ke; }
-	vector<float> getNs() const { return Ns; }
-	vector<float> getD() const { return d; }
+	void light(int materialIndex) const;
 };
 
 #endif
