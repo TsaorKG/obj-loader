@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <stdio.h>
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #include <GLUT/glut.h>
@@ -57,4 +58,13 @@ void VectorTOglfloat(Vector v, GLfloat* tmp) {
 	tmp[0] = (GLfloat)v.getx();
 	tmp[1] = (GLfloat)v.gety();
 	tmp[2] = (GLfloat)v.getz();
+}
+
+bool exist(const string& name) {
+	// test existence of a file
+	if (FILE *file = fopen(name.c_str(), "r")) {
+		fclose(file);
+		return true;
+	}
+	return false;
 }

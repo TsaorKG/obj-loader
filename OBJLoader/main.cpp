@@ -1,6 +1,7 @@
 #include "vector.h"
 #include "texture.h"
 #include "mesh.h"
+#include "utilities.h"
 #include <iostream>
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -73,7 +74,7 @@ int main(int argc, char *argv[]) {
    glEnable(GL_LIGHT0);
 
    // Texture loading
-   if (mesh.getTextureFiles().size() > 0)
+   if (mesh.getTextureFiles().size() > 0 && exist(mesh.getTextureFiles()[0]))
    {
       GLuint textureID = 0;
       Texture T = Texture(mesh.getTextureFiles()[0].c_str(), false);
