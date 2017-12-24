@@ -12,3 +12,5 @@
    - Parse the file
    - If inclusion of .MTL texture file -> parse .MTL file 
    - Generating the object through OpenGL
+
+Try out our webGL OBJ loader [Web Loader](https://gabrielwal.github.io/RV-2017-2018/loader.html)
