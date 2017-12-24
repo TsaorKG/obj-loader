@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <script src="js/babylon.js"></script>
+        <script src="js/gl-matrix-min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/mainStyle.css" />
+    </head>
+    <body>
+        <br/>
+        <h1 id="entete">Basic shape for 3D visualization</h1>
+        <div id="divCheckbox" style="display: none;">TEST</div> 
+        <div>
+            <canvas id="renderCanvas"  tabindex="1" width="500" height="200"></canvas>
+            <script>
+                var mesh = new Mesh(reader.result);
+                    //TEST
+                    var canvas = document.getElementById("renderCanvas"); // Get the canvas element 
+                    var engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
+                    /******* Add the create scene function ******/
+                    var createScene = function (mesh) {
+                        // Create the scene space
+                        var scene = new BABYLON.Scene(engine);
+                        // Add a camera to the scene and attach it to the canvas
+                        var camera = new BABYLON.ArcRotateCamera("camera",  0, 0, 0, new BABYLON.Vector3(0, 0, 0), scene);
+                        camera.setPosition(new BABYLON.Vector3(0, 5, -30));
+                        camera.attachControl(canvas, true);
+                        // Add lights to the scene
+                        var light = new BABYLON.DirectionalLight("direct", new BABYLON.Vector3(0, 0, 1), scene);
+                        var triangle = new BABYLON.Mesh('triangle', scene);
+                        
+                            //Then, the points for the triangle element:
+                        var positions = [
+                            0, 1, 0,
+                            -1, -1, 0,
+                            1, -1, 0
+                        ];
+                        
+                            //Next, we create the normals (orientation):
+                        var normals = [
+                            1, 1, 1,
+                            1, 1, 1,
+                            1, 1, 1
+                        ];
+                        
+                            //And the indices, for the points order:
+                        var indices = [];
+                        indices.push(0);
+                        indices.push(1);
+                        indices.push(2);
+                        
+                            //Finally, we load everything in our mesh:
+                        triangle.setVerticesData(positions, BABYLON.VertexBuffer.PositionKind, true);
+                        triangle.setVerticesData(normals, BABYLON.VertexBuffer.NormalKind, true);
+                        triangle.setIndices(indices);
+                        //BABYLON.VertexData.ComputeNormals(vertexData.positions, vertexData.indices, vertexData.normals);
+                        vertexData.applyToMesh(triangle);
+                        triangle.material = new BABYLON.StandardMaterial("material", scene);
+                        triangle.material.backFaceCulling = false;
+                        return scene;
+                    };
+                    /******* End of the create scene function ******/    
+                    var scene = createScene(mesh); //Call the createScene function
+                    engine.runRenderLoop(function () { // Register a render loop to repeatedly render the scene
+                            scene.render();
+                    });
+                    window.addEventListener("resize", function () { // Watch for browser/canvas resize events
+                            engine.resize();
+                    });
+            </script>
+        </div>
+    </body>
+</html>
