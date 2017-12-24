@@ -35,25 +35,25 @@
                             1, -1, 0
                         ];
                         
-                            //Next, we create the normals (orientation):
+                        //Next, we create the normals (orientation):
                         var normals = [
                             1, 1, 1,
                             1, 1, 1,
                             1, 1, 1
                         ];
                         
-                            //And the indices, for the points order:
+                        //And the indices, for the points order:
                         var indices = [];
                         indices.push(0);
                         indices.push(1);
                         indices.push(2);
-                        
-                            //Finally, we load everything in our mesh:
+                        //var vertexData = new BABYLON.VertexData();
+                        //Finally, we load everything in our mesh:
                         triangle.setVerticesData(positions, BABYLON.VertexBuffer.PositionKind, true);
                         triangle.setVerticesData(normals, BABYLON.VertexBuffer.NormalKind, true);
                         triangle.setIndices(indices);
                         //BABYLON.VertexData.ComputeNormals(vertexData.positions, vertexData.indices, vertexData.normals);
-                        vertexData.applyToMesh(triangle);
+                        //vertexData.applyToMesh(triangle);
                         triangle.material = new BABYLON.StandardMaterial("material", scene);
                         triangle.material.backFaceCulling = false;
 
