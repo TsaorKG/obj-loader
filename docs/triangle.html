@@ -18,46 +18,113 @@
                     var engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
                     /******* Add the create scene function ******/
                     var createScene = function () {
-                        // Create the scene space
-                        var scene = new BABYLON.Scene(engine);
-                        // Add a camera to the scene and attach it to the canvas
-                        var camera = new BABYLON.ArcRotateCamera("camera",  0, 0, 0, new BABYLON.Vector3(0, 0, 0), scene);
-                        camera.setPosition(new BABYLON.Vector3(0, 5, -30));
-                        camera.attachControl(canvas, true);
-                        // Add lights to the scene
-                        var light = new BABYLON.DirectionalLight("direct", new BABYLON.Vector3(0, 0, 1), scene);
-                        var triangle = new BABYLON.Mesh('triangle', scene);
+                        var createScene = function () {
+                            var scene = new BABYLON.Scene(engine);
                         
-                            //Then, the points for the triangle element:
-                        var positions = [
-                            0, 1, 0,
-                            -1, -1, 0,
-                            1, -1, 0
-                        ];
+                            var light = new BABYLON.DirectionalLight("hemi", new BABYLON.Vector3(0, 0, 1), scene);
+                            
+                            var camera = new BABYLON.ArcRotateCamera("camera1",  0, 0, 0, new BABYLON.Vector3(0, 0, 0), scene);
+                              camera.setPosition(new BABYLON.Vector3(0, 5, -30));
+                            camera.attachControl(canvas, true);
+                              
+                            //Create a custom mesh  
+                            var customMesh = new BABYLON.Mesh("custom", scene);
+                            
+                            //Set arrays for positions and indices
+                            var positions = [-5, 2, -3, -7, -2, -3, -3, -2, -3, 5, 2, 3, 7, -2, 3, 3, -2, 3];
+                            var indices = [0, 1, 2, 3, 4, 5];	
+                            
+                            //Empty array to contain calculated values
+                            var normals = [];
+                            
+                            var vertexData = new BABYLON.VertexData();
+                            BABYLON.VertexData.ComputeNormals(positions, indices, normals);
                         
-                        //Next, we create the normals (orientation):
-                        var normals = [
-                            1, 1, 1,
-                            1, 1, 1,
-                            1, 1, 1
-                        ];
+                            //Assign positions, indices and normals to vertexData
+                            vertexData.positions = positions;
+                            vertexData.indices = indices;
+                            vertexData.normals = normals;
                         
-                        //And the indices, for the points order:
-                        var indices = [];
-                        indices.push(0);
-                        indices.push(1);
-                        indices.push(2);
-                        //var vertexData = new BABYLON.VertexData();
-                        //Finally, we load everything in our mesh:
-                        triangle.setVerticesData(positions, BABYLON.VertexBuffer.PositionKind, true);
-                        triangle.setVerticesData(normals, BABYLON.VertexBuffer.NormalKind, true);
-                        triangle.setIndices(indices);
-                        //BABYLON.VertexData.ComputeNormals(vertexData.positions, vertexData.indices, vertexData.normals);
-                        //vertexData.applyToMesh(triangle);
-                        triangle.material = new BABYLON.StandardMaterial("material", scene);
-                        triangle.material.backFaceCulling = false;
-
-                        return scene;
+                            //Apply vertexData to custom mesh
+                            vertexData.applyToMesh(customMesh);
+                            
+                            
+                            /******Display custom mesh in wireframe view to show its creation****************/
+                            var mat = new BABYLON.StandardMaterial("mat", scene);
+                            mat.wireframe = true;
+                            customMesh.material = mat;
+                            /*******************************************************************************/
+                        
+                            var makeTextPlane = function(text, color, size) {
+                                var dynamicTexture = new BABYLON.DynamicTexture("DynamicTexture", 50, scene, true);
+                                dynamicTexture.hasAlpha = true;
+                                dynamicTexture.drawText(text, 5, 40, "bold 36px Arial", color , "transparent", true);
+                                var plane = new BABYLON.Mesh.CreatePlane("TextPlane", size, scene, true);
+                                plane.material = new BABYLON.StandardMaterial("TextPlaneMaterial", scene);
+                                plane.material.backFaceCulling = false;
+                                plane.material.specularColor = new BABYLON.Color3(0, 0, 0);
+                                plane.material.diffuseTexture = dynamicTexture;
+                                return plane;
+                            };
+                            
+                            // show axis
+                            var showAxis = function(size) {
+                            var axisX = BABYLON.Mesh.CreateLines("axisX", [ 
+                                      new BABYLON.Vector3.Zero(), new BABYLON.Vector3(size, 0, 0), new BABYLON.Vector3(size * 0.95, 0.05 * size, 0), 
+                                      new BABYLON.Vector3(size, 0, 0), new BABYLON.Vector3(size * 0.95, -0.05 * size, 0)
+                            ], scene);
+                                axisX.color = new BABYLON.Color3(1, 0, 0);
+                                var xChar = makeTextPlane("X", "red", size / 10);
+                                xChar.position = new BABYLON.Vector3(0.9 * size, -0.05 * size, 0);
+                                var axisY = BABYLON.Mesh.CreateLines("axisY", [
+                                    new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, size, 0), new BABYLON.Vector3( -0.05 * size, size * 0.95, 0), 
+                                    new BABYLON.Vector3(0, size, 0), new BABYLON.Vector3( 0.05 * size, size * 0.95, 0)
+                                ], scene);
+                                axisY.color = new BABYLON.Color3(0, 1, 0);
+                                var yChar = makeTextPlane("Y", "green", size / 10);
+                                yChar.position = new BABYLON.Vector3(0, 0.9 * size, -0.05 * size);
+                                var axisZ = BABYLON.Mesh.CreateLines("axisZ", [
+                                    new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, 0, size), new BABYLON.Vector3( 0 , -0.05 * size, size * 0.95),
+                                    new BABYLON.Vector3(0, 0, size), new BABYLON.Vector3( 0, 0.05 * size, size * 0.95)
+                                ], scene);
+                                axisZ.color = new BABYLON.Color3(0, 0, 1);
+                                var zChar = makeTextPlane("Z", "blue", size / 10);
+                                zChar.position = new BABYLON.Vector3(0, 0.05 * size, 0.9 * size);
+                            };
+                            
+                            showAxis(10);
+                            
+                            //Label vertices with indices
+                            var i0 = makeTextPlane("0","black", 1.5);
+                            i0.position = new BABYLON.Vector3(-5, 2, -3);
+                            var i1 = makeTextPlane("1","black", 1.5);
+                            i1.position = new BABYLON.Vector3(-7, -2, -3);
+                            var i2 = makeTextPlane("2","black", 1.5);
+                            i2.position = new BABYLON.Vector3(-2.2, -2, -3)
+                            var i3 = makeTextPlane("3","black", 1.5);
+                            i3.position = new BABYLON.Vector3(5, 2, 3);
+                            var i4 = makeTextPlane("4","black", 1.5);
+                            i4.position = new BABYLON.Vector3(7.7, -2, 3);
+                            var i5 = makeTextPlane("5","black", 1.5);
+                            i5.position = new BABYLON.Vector3(3, -2, 3);
+                            
+                            
+                            //Show normals for customMesh
+                            var pdata = customMesh.getVerticesData(BABYLON.VertexBuffer.PositionKind);
+                            var ndata = customMesh.getVerticesData(BABYLON.VertexBuffer.NormalKind);
+                            
+                            for (var p = 0; p < pdata.length; p += 3) {
+                                    line=BABYLON.Mesh.CreateLines("lines", [
+                                    new BABYLON.Vector3(pdata[p],pdata[p+1],pdata[p+2]),
+                                    new BABYLON.Vector3(pdata[p]+ndata[p]*2,pdata[p+1]+ndata[p+1]*2,pdata[p+2]+ndata[p+2]*2),
+                                    new BABYLON.Vector3(pdata[p]+ndata[p]*2,pdata[p+1]+0.5,pdata[p+2]+ndata[p+2]*1.5),
+                                    new BABYLON.Vector3(pdata[p]+ndata[p]*2,pdata[p+1]-0.5,pdata[p+2]+ndata[p+2]*1.5),
+                                    new BABYLON.Vector3(pdata[p]+ndata[p]*2,pdata[p+1]+ndata[p+1]*2,pdata[p+2]+ndata[p+2]*2)
+                                ], scene);
+                            }
+                            
+                            return scene;
+                        };
                     };
                     /******* End of the create scene function ******/    
                     var scene = createScene(); //Call the createScene function
