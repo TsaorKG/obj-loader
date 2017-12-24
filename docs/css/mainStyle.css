@@ -2,12 +2,12 @@
 html, body {
     margin: 0;
     padding: 0;
-    background-color: #02f4f89d;
+    background-color: #0289f8f1;
 }
 
 #renderCanvas {
     display: block;
-    background-color: #6ecfd4;
+    background-color: #6eb4d4;
     border: 2px solid #000000;
     border-radius: 10px;
     cursor: crosshair;
@@ -24,7 +24,7 @@ html, body {
     margin-left: auto;
     margin-right: auto;
     width: 50%;
-    background-color: #6ecfd4;
+    background-color: #6eb4d4;
     padding: 10px;
     border: 1px solid #111111;
     border-radius: 10px;
@@ -35,7 +35,7 @@ html, body {
     margin-left: auto;
     margin-right: auto;
     border: 2px dashed #111111;
-    background-color: #6ecfd4;
+    background-color: #6eb4d4;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;

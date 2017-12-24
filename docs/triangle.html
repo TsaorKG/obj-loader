@@ -10,16 +10,14 @@
     <body>
         <br/>
         <h1 id="entete">Basic shape for 3D visualization</h1>
-        <div id="divCheckbox" style="display: none;">TEST</div> 
         <div>
             <canvas id="renderCanvas"  tabindex="1" width="500" height="200"></canvas>
             <script>
-                var mesh = new Mesh(reader.result);
                     //TEST
                     var canvas = document.getElementById("renderCanvas"); // Get the canvas element 
                     var engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
                     /******* Add the create scene function ******/
-                    var createScene = function (mesh) {
+                    var createScene = function () {
                         // Create the scene space
                         var scene = new BABYLON.Scene(engine);
                         // Add a camera to the scene and attach it to the canvas
@@ -58,10 +56,12 @@
                         vertexData.applyToMesh(triangle);
                         triangle.material = new BABYLON.StandardMaterial("material", scene);
                         triangle.material.backFaceCulling = false;
+
                         return scene;
                     };
                     /******* End of the create scene function ******/    
-                    var scene = createScene(mesh); //Call the createScene function
+                    var scene = createScene(); //Call the createScene function
+
                     engine.runRenderLoop(function () { // Register a render loop to repeatedly render the scene
                             scene.render();
                     });
