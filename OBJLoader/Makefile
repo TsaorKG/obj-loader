@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 
 SOURCE=main.cpp mesh.cpp utilities.cpp vector.cpp texture.cpp
-MYPROGRAM=prog
+MYPROGRAM=OBJLoader
 
 MYLIBRARIES=-lGL -lGLU -lglut -ljpeg
 CC=g++
