@@ -15,12 +15,17 @@
 
 ### Solution 1 
  The first solution of this project is using C++ and OpenGL library to load and show the 3D object based on an OBJ file. 
+Find out the code [here](https://github.com/GabrielWal/RV-2017-2018/tree/master/OBJLoader)
  
 ### Solution 2
  The second solution of this project is using javascript and WebGL library in order to load and show in the browser a 3D object based on an OBJ file.
 This solution is actually using WebGL through the babylonjs Library.
 Find out more about babylonjs [here](https://www.babylonjs.com/)
 
-To try out our browser OBJ loader [click here](https://gabrielwal.github.io/RV-2017-2018/loader.html)
+Try out our browser OBJ loader [here](https://gabrielwal.github.io/RV-2017-2018/loader.html)
 
 To have an example of a vertex representation [click here](https://gabrielwal.github.io/RV-2017-2018/triangle.html)
+
+## Project 2
+
+Coming soon..
