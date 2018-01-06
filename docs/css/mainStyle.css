@@ -19,6 +19,9 @@ html, body {
 #entete {
     text-align: center;
 }
+#footer {
+    text-align: center;
+}
 .dropzone {
     display: block;
     margin-left: auto;
