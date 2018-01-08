@@ -62,7 +62,6 @@
                         var vertexData = new BABYLON.VertexData();
                         var normals = [];
                         if(isNaN(mesh.vertexNormals[0])){
-                            console.log("ok")
                             BABYLON.VertexData.ComputeNormals(mesh.vertices, mesh.indices, normals);
                             vertexData.normals = normals;
                             vertexData.colors = mesh.colors;
