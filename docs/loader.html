@@ -60,20 +60,31 @@
                         
                         var customMesh = new BABYLON.Mesh("custom", scene);
                         var vertexData = new BABYLON.VertexData();
+                        var normals = [];
+                        if(isNaN(mesh.vertexNormals[0])){
+                            console.log("ok")
+                            BABYLON.VertexData.ComputeNormals(mesh.vertices, mesh.indices, normals);
+                            vertexData.normals = normals;
+                            vertexData.colors = mesh.colors;
+                            console.log("Colors :");
+                            console.log(vertexData.colors);
+                            console.log("Computed Normals :");
+                            console.log(vertexData.normals);
+                        } else {
+                            vertexData.normals = mesh.vertexNormals;
+                            console.log("Normals :");
+                            console.log(vertexData.normals);
+                        }
                         vertexData.positions = mesh.vertices;
                         vertexData.indices = mesh.indices; 
-                        //vertexData.colors = mesh.textures;
-                        vertexData.normals = mesh.vertexNormals;
+                        console.log("Positions :");
                         console.log(vertexData.positions);
-                        //console.log(vertexData.colors);
-                        console.log(vertexData.normals);
+                        console.log("Indices :");
                         console.log(vertexData.indices);
                         var mat = new BABYLON.StandardMaterial("mat", scene);
-	                    mat.backFaceCulling = false;
-	                    customMesh.material = mat;
+                        mat.backFaceCulling = false;
+                        customMesh.material = mat;
                         vertexData.applyToMesh(customMesh);
-                        BABYLON.VertexData.ComputeNormals(vertexData.positions, vertexData.indices, vertexData.normals);
-
                         return scene;
                     };
 

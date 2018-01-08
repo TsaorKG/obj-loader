@@ -1,12 +1,11 @@
-
-
 Mesh = function (objectData) {
 
-  var verts = [], vertNormals = [], textures = [], unpacked = {};
+  var verts = [], vertNormals = [], textures = [], colors = [], unpacked = {};
   // unpacking stuff
   unpacked.verts = [];
   unpacked.norms = [];
   unpacked.textures = [];
+  unpacked.colors = [];
   unpacked.hashindices = {};
   unpacked.indices = [];
   unpacked.index = 0;
@@ -21,6 +20,7 @@ Mesh = function (objectData) {
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i].trim();
     var elements = line.split(WHITESPACE_RE);
+    //console.log(elements)
     elements.shift();
     if (VERTEX_RE.test(line)) {
       // if this is a vertex
@@ -64,7 +64,10 @@ Mesh = function (objectData) {
               unpacked.norms.push(+vertNormals[(vertex[2] - 1) * 3 + 1]);
               unpacked.norms.push(+vertNormals[(vertex[2] - 1) * 3 + 2]);
               // add the newly created vertex to the list of indices
-              
+              unpacked.colors.push(0.4);
+              unpacked.colors.push(0.6);
+              unpacked.colors.push(0.8);
+              unpacked.colors.push(1);
               unpacked.hashindices[elements[j]] = unpacked.index;
               unpacked.indices.push(unpacked.index);
               // increment the counter
@@ -102,6 +105,11 @@ Mesh = function (objectData) {
               unpacked.norms.push(+vertNormals[(vertex[2] - 1) * 3 + 0]);
               unpacked.norms.push(+vertNormals[(vertex[2] - 1) * 3 + 1]);
               unpacked.norms.push(+vertNormals[(vertex[2] - 1) * 3 + 2]);
+
+              unpacked.colors.push(0.4);
+              unpacked.colors.push(0.6);
+              unpacked.colors.push(0.8);
+              unpacked.colors.push(1);
               // add the newly created vertex to the list of indices
               unpacked.hashindices[elements[j]] = unpacked.index;
               unpacked.indices.push(unpacked.index);
@@ -119,5 +127,6 @@ Mesh = function (objectData) {
   this.vertices = new Float32Array(unpacked.verts);
   this.vertexNormals = new Float32Array(unpacked.norms);
   this.textures = new Float32Array(unpacked.textures);
+  this.colors = new Float32Array(unpacked.colors);
   this.indices = new Float32Array(unpacked.indices);
 }
