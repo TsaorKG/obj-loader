@@ -1,12 +1,8 @@
 # Welcome to our Projects Webpage
  Author: Gabriel Walbron & Adrien Jacquin
-
- In this web page you will find all the information about our project made in relation to our virtual reality lessons at Ecole Centrale Nantes.
-
-
   
-## Project 1 
- The goal of our first project is to implement a .OBJ file loader in order to read 3D object files.
+## Project  
+ The goal of our project is to implement a .OBJ file loader in order to read 3D object files.
    
  The steps are the following :
    - Parse the file
@@ -15,17 +11,14 @@
 
 ### Solution 1 
  The first solution of this project is using C++ and OpenGL library to load and show the 3D object based on an OBJ file. 
-Find out the code [here](https://github.com/GabrielWal/RV-2017-2018/tree/master/OBJLoader)
+Find out the code [here](https://github.com/GabrielWal/obj-loader/tree/master/OBJLoader)
  
 ### Solution 2
  The second solution of this project is using javascript and WebGL library in order to load and show in the browser a 3D object based on an OBJ file.
 This solution is actually using WebGL through the babylonjs Library.
 Find out more about babylonjs [here](https://www.babylonjs.com/)
 
-Try out our browser OBJ loader [here](https://gabrielwal.github.io/RV-2017-2018/loader.html)
+Try out our browser OBJ loader [here](https://gabrielwal.github.io/obj-loader/loader.html)
 
-To have an example of a vertex representation [click here](https://gabrielwal.github.io/RV-2017-2018/triangle.html)
+To have an example of a vertex representation [click here](https://gabrielwal.github.io/obj-loader/triangle.html)
 
-## Project 2
-
-Coming soon..
